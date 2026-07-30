@@ -86,14 +86,14 @@ export default function ResultPanel({ result, audioBlob }: Props) {
       {/* 音乐参数展示 */}
       <div className="grid grid-cols-3 gap-3 rounded-lg bg-app-bg p-4">
         <ParamBadge label={t('result.params.bpm')} value={`${params.bpm}`} />
-        <ParamBadge label={t('result.params.key')} value={`${params.key} ${params.scale === 'major' ? '大调' : '小调'}`} />
+        <ParamBadge label={t('result.params.key')} value={`${params.key} ${t(params.scale === 'major' ? 'result.params.major' : 'result.params.minor')}`} />
         <ParamBadge label={t('result.params.style')} value={params.style} />
       </div>
 
       {/* 和弦展示 */}
       {params.chords.length > 0 && (
         <div>
-          <p className="mb-2 text-xs font-medium text-app-text-secondary">和弦走向</p>
+          <p className="mb-2 text-xs font-medium text-app-text-secondary">{t('result.chord.label')}</p>
           <div className="flex flex-wrap gap-1.5">
             {params.chords.map((c, i) => (
               <span key={i} className="rounded-md bg-app-primary/10 px-2 py-1 text-xs text-app-primary">

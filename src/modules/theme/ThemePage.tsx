@@ -64,14 +64,14 @@ export default function ThemePage() {
         <div>
           <p className="mb-3 text-sm text-app-text-secondary">{t('theme.custom.preview')}</p>
           <div className="grid grid-cols-4 gap-3">
-            <ColorSwatch label="Background" color={previewColors.bg} />
-            <ColorSwatch label="Surface" color={previewColors.surface} />
-            <ColorSwatch label="Primary" color={previewColors.primary} />
-            <ColorSwatch label="Accent" color={previewColors.accent} />
-            <ColorSwatch label="Border" color={previewColors.border} />
-            <ColorSwatch label="Text" color={previewColors.text} />
-            <ColorSwatch label="Secondary Text" color={previewColors.textSecondary} />
-            <ColorSwatch label="Primary Hover" color={previewColors.primaryHover} />
+            <ColorSwatch label={t('theme.color.bg')} color={previewColors.bg} />
+            <ColorSwatch label={t('theme.color.surface')} color={previewColors.surface} />
+            <ColorSwatch label={t('theme.color.primary')} color={previewColors.primary} />
+            <ColorSwatch label={t('theme.color.accent')} color={previewColors.accent} />
+            <ColorSwatch label={t('theme.color.border')} color={previewColors.border} />
+            <ColorSwatch label={t('theme.color.text')} color={previewColors.text} />
+            <ColorSwatch label={t('theme.color.textSecondary')} color={previewColors.textSecondary} />
+            <ColorSwatch label={t('theme.color.primaryHover')} color={previewColors.primaryHover} />
           </div>
         </div>
       )}
@@ -79,10 +79,10 @@ export default function ThemePage() {
       {/* 预览卡片 */}
       {previewColors && (
         <div className="mt-6 rounded-xl border border-app-border p-4">
-          <p className="mb-3 text-sm text-app-text-secondary">Preview</p>
+          <p className="mb-3 text-sm text-app-text-secondary">{t('theme.preview.label')}</p>
           <div className="flex gap-3">
-            <button className="rounded-lg bg-app-primary px-4 py-2 text-sm text-white">Primary Button</button>
-            <button className="rounded-lg border border-app-border bg-app-surface px-4 py-2 text-sm text-app-text">Secondary</button>
+            <button className="rounded-lg bg-app-primary px-4 py-2 text-sm text-white">{t('theme.preview.btn.primary')}</button>
+            <button className="rounded-lg border border-app-border bg-app-surface px-4 py-2 text-sm text-app-text">{t('theme.preview.btn.secondary')}</button>
           </div>
         </div>
       )}

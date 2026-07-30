@@ -48,9 +48,9 @@ export default function SettingsPage() {
               onChange={(e) => updateField('modelProvider', e.target.value as AppConfig['modelProvider'])}
               className="w-full max-w-md rounded-lg border border-app-border bg-app-bg px-3 py-2 text-sm text-app-text focus:border-app-primary focus:outline-none"
             >
-              <option value="deepseek">DeepSeek</option>
-              <option value="openai">OpenAI</option>
-              <option value="custom">Custom</option>
+              <option value="deepseek">{t('settings.provider.deepseek')}</option>
+              <option value="openai">{t('settings.provider.openai')}</option>
+              <option value="custom">{t('settings.provider.custom')}</option>
             </select>
           </div>
           <div>
@@ -112,7 +112,7 @@ export default function SettingsPage() {
         onClick={handleSave}
         className="rounded-lg bg-app-primary px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-app-primary-hover"
       >
-        {saved ? '已保存' : t('common.save')}
+        {saved ? t('settings.saved') : t('common.save')}
       </button>
     </div>
   )

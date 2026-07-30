@@ -51,6 +51,9 @@ i18n.use(initReactI18next).init({
         'result.params.bpm': '速度',
         'result.params.key': '调性',
         'result.params.style': '风格',
+        'result.params.major': '大调',
+        'result.params.minor': '小调',
+        'result.chord.label': '和弦走向',
 
         // History
         'history.title': '生成历史',
@@ -73,12 +76,27 @@ i18n.use(initReactI18next).init({
         'settings.theme.light': '浅色',
         'settings.theme.system': '跟随系统',
         'settings.theme.custom': '自定义主题',
+        'settings.provider.deepseek': 'DeepSeek',
+        'settings.provider.openai': 'OpenAI',
+        'settings.provider.custom': '自定义',
+        'settings.saved': '已保存',
 
         // Theme
         'theme.custom.title': '自定义主题',
         'theme.custom.upload': '上传图片提取配色',
         'theme.custom.reset': '恢复默认',
         'theme.custom.preview': '预览',
+        'theme.color.bg': '背景色',
+        'theme.color.surface': '表面色',
+        'theme.color.primary': '主色调',
+        'theme.color.accent': '强调色',
+        'theme.color.border': '边框色',
+        'theme.color.text': '文字色',
+        'theme.color.textSecondary': '次要文字色',
+        'theme.color.primaryHover': '主色调悬停',
+        'theme.preview.btn.primary': '主要按钮',
+        'theme.preview.btn.secondary': '次要按钮',
+        'theme.preview.label': '预览',
 
         // Common
         'common.error': '出错了',
@@ -134,6 +152,9 @@ i18n.use(initReactI18next).init({
         'result.params.bpm': 'Tempo',
         'result.params.key': 'Key',
         'result.params.style': 'Style',
+        'result.params.major': 'Major',
+        'result.params.minor': 'Minor',
+        'result.chord.label': 'Chord Progression',
 
         // History
         'history.title': 'Generation History',
@@ -156,12 +177,27 @@ i18n.use(initReactI18next).init({
         'settings.theme.light': 'Light',
         'settings.theme.system': 'Follow System',
         'settings.theme.custom': 'Custom Theme',
+        'settings.provider.deepseek': 'DeepSeek',
+        'settings.provider.openai': 'OpenAI',
+        'settings.provider.custom': 'Custom',
+        'settings.saved': 'Saved',
 
         // Theme
         'theme.custom.title': 'Custom Theme',
         'theme.custom.upload': 'Upload Image to Extract Colors',
         'theme.custom.reset': 'Reset to Default',
         'theme.custom.preview': 'Preview',
+        'theme.color.bg': 'Background',
+        'theme.color.surface': 'Surface',
+        'theme.color.primary': 'Primary',
+        'theme.color.accent': 'Accent',
+        'theme.color.border': 'Border',
+        'theme.color.text': 'Text',
+        'theme.color.textSecondary': 'Secondary Text',
+        'theme.color.primaryHover': 'Primary Hover',
+        'theme.preview.btn.primary': 'Primary Button',
+        'theme.preview.btn.secondary': 'Secondary',
+        'theme.preview.label': 'Preview',
 
         // Common
         'common.error': 'Something went wrong',
