@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === 默认深色主题 CSS 变量 === */
+:root {
+  --color-bg: #0f0f1a;
+  --color-surface: #1a1a2e;
+  --color-border: #2a2a45;
+  --color-text: #e8e8f0;
+  --color-text-secondary: #9090a8;
+  --color-primary: #7c5cfc;
+  --color-primary-hover: #9b7fff;
+  --color-accent: #00d4aa;
+}
+
+/* === 浅色主题 === */
+:root.light {
+  --color-bg: #f5f5fa;
+  --color-surface: #ffffff;
+  --color-border: #d8d8e8;
+  --color-text: #1a1a2e;
+  --color-text-secondary: #6b6b85;
+  --color-primary: #6b48e0;
+  --color-primary-hover: #5535c0;
+  --color-accent: #00a884;
+}
+
+/* === 全局样式 === */
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* === 滚动条风格 === */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
