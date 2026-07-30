@@ -1,13 +1,101 @@
+import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { themeService } from '@/services/theme/theme-service'
+import type { ThemeColors } from '@/types'
+import Button from '@/components/ui/Button'
 
 export default function ThemePage() {
   const { t } = useTranslation()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [extractedColors, setExtractedColors] = useState<ThemeColors | null>(null)
+  const [previewColors, setPreviewColors] = useState<ThemeColors | null>(null)
+  const [isExtracting, setIsExtracting] = useState(false)
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsExtracting(true)
+    try {
+      const colors = await themeService.applyCustomTheme(file)
+      setExtractedColors(colors)
+      setPreviewColors(colors)
+    } catch {
+      // 图片加载失败
+    } finally {
+      setIsExtracting(false)
+    }
+  }
+
+  const handleReset = () => {
+    themeService.resetTheme()
+    setExtractedColors(null)
+    setPreviewColors(null)
+  }
 
   return (
-    <div className="rounded-xl border border-app-border bg-app-surface p-6">
+    <div className="overflow-auto rounded-xl border border-app-border bg-app-surface p-6">
       <h2 className="mb-6 text-lg font-semibold text-app-text">{t('theme.custom.title')}</h2>
-      <p className="text-sm text-app-text-secondary">{t('theme.custom.upload')}</p>
-      {/* 图片导入自定义主题将在阶段 3 实现 */}
+
+      {/* 图片上传 */}
+      <div className="mb-6">
+        <p className="mb-3 text-sm text-app-text-secondary">{t('theme.custom.upload')}</p>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+        <div className="flex gap-3">
+          <Button variant="secondary" onClick={() => fileInputRef.current?.click()} disabled={isExtracting}>
+            {isExtracting ? t('common.loading') : t('theme.custom.upload')}
+          </Button>
+          {extractedColors && (
+            <Button variant="ghost" onClick={handleReset}>
+              {t('theme.custom.reset')}
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* 颜色预览 */}
+      {previewColors && (
+        <div>
+          <p className="mb-3 text-sm text-app-text-secondary">{t('theme.custom.preview')}</p>
+          <div className="grid grid-cols-4 gap-3">
+            <ColorSwatch label="Background" color={previewColors.bg} />
+            <ColorSwatch label="Surface" color={previewColors.surface} />
+            <ColorSwatch label="Primary" color={previewColors.primary} />
+            <ColorSwatch label="Accent" color={previewColors.accent} />
+            <ColorSwatch label="Border" color={previewColors.border} />
+            <ColorSwatch label="Text" color={previewColors.text} />
+            <ColorSwatch label="Secondary Text" color={previewColors.textSecondary} />
+            <ColorSwatch label="Primary Hover" color={previewColors.primaryHover} />
+          </div>
+        </div>
+      )}
+
+      {/* 预览卡片 */}
+      {previewColors && (
+        <div className="mt-6 rounded-xl border border-app-border p-4">
+          <p className="mb-3 text-sm text-app-text-secondary">Preview</p>
+          <div className="flex gap-3">
+            <button className="rounded-lg bg-app-primary px-4 py-2 text-sm text-white">Primary Button</button>
+            <button className="rounded-lg border border-app-border bg-app-surface px-4 py-2 text-sm text-app-text">Secondary</button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ColorSwatch({ label, color }: { label: string; color: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div className="h-10 w-10 rounded-lg border border-app-border" style={{ backgroundColor: color }} />
+      <span className="text-xs text-app-text">{color}</span>
+      <span className="text-xs text-app-text-secondary">{label}</span>
     </div>
   )
 }
