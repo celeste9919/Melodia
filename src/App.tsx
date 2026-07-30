@@ -1,22 +1,39 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import AppShell from '@/components/layout/AppShell'
+import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import CreatePage from '@/modules/input/CreatePage'
-import HistoryPage from '@/modules/history/HistoryPage'
-import SettingsPage from '@/modules/settings/SettingsPage'
-import ThemePage from '@/modules/theme/ThemePage'
+
+// 延迟加载非首页路由以减少初始打包体积
+const HistoryPage = lazy(() => import('@/modules/history/HistoryPage'))
+const SettingsPage = lazy(() => import('@/modules/settings/SettingsPage'))
+const ThemePage = lazy(() => import('@/modules/theme/ThemePage'))
+
+function PageLoader() {
+  return (
+    <div className="flex h-64 items-center justify-center">
+      <LoadingSpinner />
+    </div>
+  )
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      <AppShell>
-        <Routes>
-          <Route path="/" element={<CreatePage />} />
-          <Route path="/history" element={<HistoryPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/theme" element={<ThemePage />} />
-        </Routes>
-      </AppShell>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppShell>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<CreatePage />} />
+              <Route path="/history" element={<HistoryPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/theme" element={<ThemePage />} />
+            </Routes>
+          </Suspense>
+        </AppShell>
+      </BrowserRouter>
+    </ErrorBoundary>
   )
 }
 
