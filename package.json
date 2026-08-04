@@ -1,12 +1,84 @@
 {
   "name": "ai-music-studio",
+  "description": "AI-powered music generation studio - create unique music with DeepSeek AI and Tone.js synthesis",
+  "author": "AI Music Studio Team",
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.cjs",
+    "electron:dev": "vite build && NODE_ENV=development electron . --dev",
+    "electron:package": "vite build && electron-builder --win --dir",
+    "electron:installer:win": "electron-builder --win --prepackaged release/win-unpacked",
+    "electron:installer:mac": "electron-builder --mac --prepackaged release/mac",
+    "electron:build:win": "npm run electron:package && npm run electron:installer:win",
+    "electron:build:mac": "vite build && electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.ai-music-studio.app",
+    "productName": "AI Music Studio",
+    "directories": {
+      "output": "release"
+    },
+    "asar": true,
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "public/icon.png",
+      "public/icon.ico",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
+      "installerHeaderIcon": "public/icon.ico",
+      "deleteAppDataOnUninstall": true
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "public/icon.png",
+      "category": "public.app-category.music"
+    },
+    "dmg": {
+      "title": "AI Music Studio Installer",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    }
   },
   "dependencies": {
     "i18next": "^26.3.6",
@@ -15,7 +87,8 @@
     "react-dom": "^18.3.1",
     "react-i18next": "^17.0.11",
     "react-router-dom": "^7.18.2",
-    "tone": "^15.1.22"
+    "tone": "^15.1.22",
+    "vexflow": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
@@ -23,6 +96,8 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.5.4",
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
     "postcss": "^8.5.25",
     "tailwindcss": "^3.4.19",
     "typescript": "^7.0.2",

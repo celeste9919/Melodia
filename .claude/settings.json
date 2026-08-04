@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx pkg *)",
+      "Bash(mkdir -p \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\music-studio-desktop\")",
+      "Bash(cp -r \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\dist\" \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\music-studio-desktop\\\\\" && cp \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\server.js\" \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\music-studio-desktop\\\\\")",
+      "Bash(cp \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\start.bat\" \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\music-studio-desktop\\\\\" && cp \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\start.sh\" \"e:\\\\Program Files\\\\Microsoft VS Code-WorkOut\\\\muisc_app\\\\music-studio-desktop\\\\\")",
+      "Bash(node \"e:/Program Files/Microsoft VS Code-WorkOut/muisc_app/scripts/generate-icon.cjs\")",
+      "Bash(node -e \"const v = require\\('vexflow'\\); console.log\\(Object.keys\\(v\\).slice\\(0,30\\)\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const VF = require\\('vexflow'\\); const a = new VF.Annotation\\('test'\\); console.log\\('Annotation methods:', Object.getOwnPropertyNames\\(Object.getPrototypeOf\\(a\\)\\).filter\\(k => typeof a[k] !== 'function'\\).slice\\(0,10\\)\\); console.log\\('Stave addModifier params check...'\\); console.log\\('Annotation proto:', Object.getPrototypeOf\\(a\\).constructor.name\\)\")",
+      "Bash(node -e \"const VF = require\\('vexflow'\\); const s = new VF.Stave\\(10,10,300\\); console.log\\('addModifier params length:', s.addModifier.length\\); const a = new VF.Annotation\\('test'\\); console.log\\('a instanceof:', Object.getPrototypeOf\\(a\\).constructor.name\\); console.log\\('is instance of Element:', a instanceof VF.Element\\); console.log\\('Element keys:', Object.keys\\(VF\\).filter\\(k => VF[k] && VF[k].prototype && VF[k].prototype.constructor && VF[k].prototype.constructor.name === 'Q'\\).slice\\(0,5\\)\\)\")",
+      "Bash(node \"e:/Program Files/Microsoft VS Code-WorkOut/muisc_app/scripts/png-to-ico.cjs\")"
+    ]
+  }
+}

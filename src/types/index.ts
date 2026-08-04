@@ -19,6 +19,7 @@ export interface MusicParams {
   chords: Chord[]
   melody: Note[]
   bass?: Note[]
+  vocals?: VocalNote[]
   style: string
   duration: number
 }
@@ -37,6 +38,16 @@ export interface Note {
   pitch: number
   velocity: number
   duration: number
+}
+
+/** Vocal note with vowel for formant synthesis */
+export interface VocalNote {
+  time: number
+  pitch: number
+  velocity: number
+  duration: number
+  vowel: string
+  lyric?: string
 }
 
 /** Complete generation result */

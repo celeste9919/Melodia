@@ -1,5 +1,6 @@
-import type { MusicParams, AudioPlayback, Note, Chord } from '@/types'
+import type { MusicParams, AudioPlayback, Note, Chord, VocalNote } from '@/types'
 import * as Tone from 'tone'
+import { VocalSynth } from './vocal-synth'
 
 /**
  * 音频引擎 — 根据音乐参数使用 Tone.js 合成音频
@@ -9,6 +10,8 @@ export const audioEngine = {
   _synths: null as { melody: Tone.PolySynth; chords: Tone.PolySynth; bass: Tone.MonoSynth } | null,
   _parts: [] as Tone.Part[],
   _playing: false,
+  _vocalSynth: null as VocalSynth | null,
+  _vocalEnabled: true,
 
   async synthesize(params: MusicParams): Promise<AudioPlayback> {
     // 清理之前的合成器
@@ -56,6 +59,13 @@ export const audioEngine = {
         bassSynth.triggerAttackRelease(note.pitch, note.dur, time, note.velocity / 127)
       }, bassNotes).start(0)
       this._parts.push(bassPart)
+    }
+
+    // Vocal track via formant synthesis
+    if (this._vocalEnabled && params.vocals && params.vocals.length > 0) {
+      const rawCtx = Tone.getContext().rawContext as AudioContext
+      this._vocalSynth = new VocalSynth(rawCtx)
+      this._vocalSynth.synthesize(params.vocals, bpm)
     }
 
     const realDuration = params.duration // duration 本身就是秒数
@@ -132,7 +142,28 @@ export const audioEngine = {
     }, duration, 2, sampleRate)
 
     // 将 AudioBuffer 转换为 WAV Blob
-    return audioBufferToWavBlob(buffer.get() as AudioBuffer)
+    const mainBuffer = buffer.get() as AudioBuffer
+
+    // Render vocals separately using OfflineAudioContext
+    if (params.vocals && params.vocals.length > 0) {
+      const vocalBuffer = await renderVocalsOffline(params.vocals, params.bpm, duration, sampleRate)
+      const mixed = await mixBuffers(mainBuffer, vocalBuffer)
+      return audioBufferToWavBlob(mixed)
+    }
+
+    return audioBufferToWavBlob(mainBuffer)
+  },
+
+  setVocalEnabled(enabled: boolean) {
+    this._vocalEnabled = enabled
+  },
+
+  toggleVocal() {
+    this._vocalEnabled = !this._vocalEnabled
+    if (!this._vocalEnabled && this._vocalSynth) {
+      this._vocalSynth.stop()
+    }
+    return this._vocalEnabled
   },
 
   dispose() {
@@ -140,6 +171,10 @@ export const audioEngine = {
     this._parts.forEach(p => p.dispose())
     this._parts = []
     this._playing = false
+    if (this._vocalSynth) {
+      this._vocalSynth.dispose()
+      this._vocalSynth = null
+    }
   },
 }
 
@@ -254,4 +289,91 @@ function writeString(view: DataView, offset: number, str: string) {
   for (let i = 0; i < str.length; i++) {
     view.setUint8(offset + i, str.charCodeAt(i))
   }
+}
+
+/**
+ * Render vocal notes using OfflineAudioContext (formant synthesis)
+ */
+async function renderVocalsOffline(
+  vocals: VocalNote[],
+  bpm: number,
+  duration: number,
+  sampleRate: number
+): Promise<AudioBuffer> {
+  const ctx = new OfflineAudioContext(2, sampleRate * duration, sampleRate)
+  const beatDuration = 60 / bpm
+
+  const VOWEL_FORMANTS: Record<string, [number, number, number]> = {
+    a: [800, 1150, 2900],
+    e: [400, 2000, 2800],
+    i: [270, 2300, 3000],
+    o: [500, 1000, 2700],
+    u: [300, 870, 2200],
+  }
+
+  for (const note of vocals) {
+    const startTime = note.time * beatDuration
+    const dur = note.duration * beatDuration
+    const freq = 440 * Math.pow(2, (note.pitch - 69) / 12)
+    const vowel = (note.vowel || 'a').toLowerCase()
+    const [f1, f2, f3] = VOWEL_FORMANTS[vowel] || VOWEL_FORMANTS.a
+    const velocity = note.velocity / 127
+
+    const osc = ctx.createOscillator()
+    osc.type = 'sawtooth'
+    osc.frequency.value = freq
+
+    const gain = ctx.createGain()
+    gain.gain.value = 0
+    const attack = Math.min(0.08, dur * 0.2)
+    const release = Math.min(0.15, dur * 0.3)
+    gain.gain.setValueAtTime(0, startTime)
+    gain.gain.linearRampToValueAtTime(velocity * 0.3, startTime + attack)
+    gain.gain.setValueAtTime(velocity * 0.3, startTime + dur - release)
+    gain.gain.linearRampToValueAtTime(0, startTime + dur)
+
+    const bp1 = ctx.createBiquadFilter()
+    bp1.type = 'bandpass'; bp1.frequency.value = f1; bp1.Q.value = 10
+    const bp2 = ctx.createBiquadFilter()
+    bp2.type = 'bandpass'; bp2.frequency.value = f2; bp2.Q.value = 10
+    const bp3 = ctx.createBiquadFilter()
+    bp3.type = 'bandpass'; bp3.frequency.value = f3; bp3.Q.value = 10
+
+    osc.connect(gain)
+    gain.connect(bp1)
+    bp1.connect(bp2)
+    bp2.connect(bp3)
+    bp3.connect(ctx.destination)
+
+    osc.start(startTime)
+    osc.stop(startTime + dur + 0.1)
+  }
+
+  return ctx.startRendering()
+}
+
+/**
+ * Mix two AudioBuffers by summing samples. Async because OfflineAudioContext.startRendering() returns a Promise.
+ */
+async function mixBuffers(a: AudioBuffer, b: AudioBuffer): Promise<AudioBuffer> {
+  const sampleRate = a.sampleRate
+  const length = Math.max(a.length, b.length)
+  const channels = Math.max(a.numberOfChannels, b.numberOfChannels)
+
+  const offlineCtx = new OfflineAudioContext(channels, length, sampleRate)
+
+  const sourceA = offlineCtx.createBufferSource()
+  sourceA.buffer = a
+  sourceA.connect(offlineCtx.destination)
+  sourceA.start(0)
+
+  const sourceB = offlineCtx.createBufferSource()
+  sourceB.buffer = b
+  const gainB = offlineCtx.createGain()
+  gainB.gain.value = 0.7
+  sourceB.connect(gainB)
+  gainB.connect(offlineCtx.destination)
+  sourceB.start(0)
+
+  return offlineCtx.startRendering()
 }

@@ -54,6 +54,11 @@ i18n.use(initReactI18next).init({
         'result.params.major': '大调',
         'result.params.minor': '小调',
         'result.chord.label': '和弦走向',
+        'result.view.viz': '可视化',
+        'result.view.score': '乐谱',
+        'result.vocal.on': '人声：开',
+        'result.vocal.off': '人声：关',
+        'result.vocal.lyrics': '歌词',
 
         // History
         'history.title': '生成历史',
@@ -155,6 +160,11 @@ i18n.use(initReactI18next).init({
         'result.params.major': 'Major',
         'result.params.minor': 'Minor',
         'result.chord.label': 'Chord Progression',
+        'result.view.viz': 'Visual',
+        'result.view.score': 'Score',
+        'result.vocal.on': 'Vocals: On',
+        'result.vocal.off': 'Vocals: Off',
+        'result.vocal.lyrics': 'Lyrics',
 
         // History
         'history.title': 'Generation History',

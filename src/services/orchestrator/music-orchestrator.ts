@@ -86,6 +86,7 @@ export const musicOrchestrator = {
         chords: parsed.chords || [],
         melody: parsed.melody.map(normalizeNote),
         bass: parsed.bass?.map(normalizeNote),
+        vocals: parsed.vocals?.map(normalizeVocalNote),
         style: request.style,
         duration: parsed.duration || request.duration,
       }
@@ -133,6 +134,17 @@ function normalizeNote(n: Record<string, unknown>): { time: number; pitch: numbe
     pitch: clampPitch(Number(n.pitch) || 60),
     velocity: clampVelocity(Number(n.velocity) || 100),
     duration: Math.max(0.125, Number(n.duration) || 0.5),
+  }
+}
+
+function normalizeVocalNote(n: Record<string, unknown>): { time: number; pitch: number; velocity: number; duration: number; vowel: string; lyric?: string } {
+  return {
+    time: Number(n.time) || 0,
+    pitch: clampPitch(Number(n.pitch) || 60),
+    velocity: clampVelocity(Number(n.velocity) || 100),
+    duration: Math.max(0.125, Number(n.duration) || 0.5),
+    vowel: String(n.vowel || 'a').charAt(0).toLowerCase(),
+    lyric: n.lyric ? String(n.lyric) : undefined,
   }
 }
 

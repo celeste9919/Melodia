@@ -50,6 +50,9 @@ ${description}
   "bass": [
     { "time": 0, "pitch": 36, "velocity": 80, "duration": 1 },
     ...
+  ],
+  "vocals": [
+    { "time": 0, "pitch": 60, "velocity": 100, "duration": 0.5, "vowel": "a", "lyric": "爱" }
   ]
 }
 
@@ -60,6 +63,9 @@ ${description}
 - duration: 持续拍数
 - root: 和弦根音（C, D, E, F, G, A, B + #/b）
 - quality: 和弦性质（maj, min, dim, aug, 7, maj7, min7）
+- vocals 是可选的：如果输入包含歌词，请为每个音节生成对应的 vocals 音符
+  - vowel: 元音字母 (a/e/i/o/u)，根据汉语拼音韵母选择最接近的元音
+  - lyric: 对应的歌词文字（可选）
 
 请生成协调、有音乐性的和弦走向和旋律，确保旋律与和弦匹配。`
   },
@@ -104,6 +110,9 @@ ${lyrics}
   ],
   "bass": [
     { "time": 0, "pitch": 36, "velocity": 80, "duration": 1 }
+  ],
+  "vocals": [
+    { "time": 0, "pitch": 60, "velocity": 100, "duration": 0.5, "vowel": "a", "lyric": "爱" }
   ]
 }
 
@@ -114,6 +123,9 @@ ${lyrics}
 - duration: 持续拍数
 - root: 和弦根音
 - quality: 和弦性质
+- vocals: 必填，为歌词的每个字/音节生成对应的人声音符
+  - vowel: 元音字母 (a/e/i/o/u)，根据汉语拼音韵母选择最接近的元音
+  - lyric: 对应的歌词文字
 
 请确保旋律与歌词的韵律和情感匹配，副歌部分有记忆点。`
   },
