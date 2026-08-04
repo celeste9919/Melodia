@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
 import ErrorBoundary from '@/components/layout/ErrorBoundary'
 import AppShell from '@/components/layout/AppShell'
@@ -21,7 +21,7 @@ function PageLoader() {
 function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <HashRouter>
         <AppShell>
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -32,7 +32,7 @@ function App() {
             </Routes>
           </Suspense>
         </AppShell>
-      </BrowserRouter>
+      </HashRouter>
     </ErrorBoundary>
   )
 }
