@@ -5,9 +5,11 @@ import { musicOrchestrator, OrchestratorError } from '@/services/orchestrator/mu
 import { historyService } from '@/services/history/history-service'
 import { audioEngine } from '@/services/audio/audio-engine'
 import InputPanel from './InputPanel'
+import WelcomeHero from './WelcomeHero'
 import ResultPanel from '@/modules/result/ResultPanel'
 import ErrorMessage from '@/components/ui/ErrorMessage'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import { SkeletonResultPanel } from '@/components/ui/Skeleton'
 
 export default function CreatePage() {
   const { t } = useTranslation()
@@ -52,7 +54,12 @@ export default function CreatePage() {
       <InputPanel onSubmit={handleSubmit} isGenerating={isGenerating} />
 
       <div className="flex flex-col gap-4 overflow-auto">
-        {isGenerating && <LoadingSpinner text={t('result.loading')} />}
+        {isGenerating && (
+          <div className="flex flex-col gap-4">
+            <LoadingSpinner text={t('result.loading')} />
+            <SkeletonResultPanel />
+          </div>
+        )}
 
         {error && (
           <ErrorMessage
@@ -61,13 +68,7 @@ export default function CreatePage() {
           />
         )}
 
-        {!isGenerating && !error && !result && (
-          <div className="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-app-border bg-app-surface/50 p-8">
-            <span className="mb-3 text-4xl opacity-40">&#x1F3B6;</span>
-            <p className="text-lg font-medium text-app-text-secondary">{t('result.empty.title')}</p>
-            <p className="mt-1 text-sm text-app-text-secondary/60">{t('result.empty.desc')}</p>
-          </div>
-        )}
+        {!isGenerating && !error && !result && <WelcomeHero />}
 
         {!isGenerating && result && (
           <ResultPanel result={result} audioBlob={audioBlob} />
