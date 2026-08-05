@@ -124,4 +124,5 @@ export interface AudioPlayback {
   getCurrentTime: () => number
   getDuration: () => number
   onEnd: (callback: () => void) => void
+  isPlaying: () => boolean
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MusicGenerateRequest, MusicGenerateResult } from '@/types'
 import { musicOrchestrator, OrchestratorError } from '@/services/orchestrator/music-orchestrator'
@@ -48,6 +48,33 @@ export default function CreatePage() {
       setIsGenerating(false)
     }
   }
+
+  // 键盘快捷键
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') return
+
+      const player = (window as unknown as Record<string, unknown>).__melodiaPlayer as {
+        handlePlay: () => void; handlePause: () => void; handleStop: () => void; isPlaying: boolean
+      } | undefined
+
+      if (e.code === 'Space') {
+        e.preventDefault()
+        if (player) {
+          player.isPlaying ? player.handlePause() : player.handlePlay()
+        }
+      } else if (e.code === 'Escape') {
+        player?.handleStop()
+      } else if ((e.ctrlKey || e.metaKey) && e.code === 'Enter') {
+        e.preventDefault()
+        document.querySelector<HTMLFormElement>('form')?.requestSubmit()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   return (
     <div className="grid h-full grid-cols-1 gap-6 lg:grid-cols-2 overflow-auto">

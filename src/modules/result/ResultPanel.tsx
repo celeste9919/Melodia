@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, lazy, Suspense } from 'react'
+import { useState, useCallback, useRef, lazy, Suspense, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MusicGenerateResult } from '@/types'
 import { audioEngine } from '@/services/audio/audio-engine'
@@ -18,6 +18,8 @@ export default function ResultPanel({ result, audioBlob }: Props) {
   const [viewMode, setViewMode] = useState<'viz' | 'score'>('viz')
   const [currentTime, setCurrentTime] = useState(0)
   const [vocalEnabled, setVocalEnabled] = useState(true)
+  const [volume, setVolume] = useState(audioEngine.getVolume())
+  const [loop, setLoop] = useState(audioEngine.getLoop())
   const hasVocals = result.params.vocals && result.params.vocals.length > 0
   const playbackRef = useRef<Awaited<ReturnType<typeof audioEngine.synthesize>> | null>(null)
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -36,6 +38,11 @@ export default function ResultPanel({ result, audioBlob }: Props) {
       clearProgressInterval()
       progressIntervalRef.current = setInterval(() => {
         setCurrentTime(playbackRef.current?.getCurrentTime() || 0)
+        if (!playbackRef.current?.isPlaying?.()) {
+          setIsPlaying(false)
+          clearProgressInterval()
+          setCurrentTime(0)
+        }
       }, 50)
       return
     }
@@ -45,13 +52,17 @@ export default function ResultPanel({ result, audioBlob }: Props) {
     playback.onEnd(() => {
       setIsPlaying(false)
       clearProgressInterval()
-      setCurrentTime(0)
+      if (!audioEngine.getLoop()) setCurrentTime(0)
     })
     playback.play()
     setIsPlaying(true)
     clearProgressInterval()
     progressIntervalRef.current = setInterval(() => {
       setCurrentTime(playbackRef.current?.getCurrentTime() || 0)
+      if (!playbackRef.current?.isPlaying?.()) {
+        setIsPlaying(false)
+        clearProgressInterval()
+      }
     }, 50)
   }, [result.params, clearProgressInterval])
 
@@ -67,6 +78,17 @@ export default function ResultPanel({ result, audioBlob }: Props) {
     setCurrentTime(0)
     clearProgressInterval()
   }, [clearProgressInterval])
+
+  const handleVolumeChange = useCallback((v: number) => {
+    setVolume(v)
+    audioEngine.setVolume(v)
+  }, [])
+
+  const handleLoopToggle = useCallback(() => {
+    const next = !loop
+    setLoop(next)
+    audioEngine.setLoop(next)
+  }, [loop])
 
   const handleDownloadWav = useCallback(() => {
     if (audioBlob) {
@@ -90,10 +112,16 @@ export default function ResultPanel({ result, audioBlob }: Props) {
   const realProgress = duration > 0 ? (currentTime / duration) * 100 : 0
   const progress = isPlaying || currentTime > 0 ? realProgress : 0
 
+  // Expose play/pause/stop for keyboard shortcuts
+  useEffect(() => {
+    ;(window as unknown as Record<string, unknown>).__melodiaPlayer = { handlePlay, handlePause, handleStop, isPlaying }
+    return () => { delete (window as unknown as Record<string, unknown>).__melodiaPlayer }
+  }, [handlePlay, handlePause, handleStop, isPlaying])
+
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-app-border bg-app-surface p-6">
       {/* 播放控制区 */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
         <Button
           variant="primary"
           onClick={isPlaying ? handlePause : handlePlay}
@@ -103,6 +131,31 @@ export default function ResultPanel({ result, audioBlob }: Props) {
         <Button variant="secondary" onClick={handleStop}>
           {t('result.stop')}
         </Button>
+
+        {/* 音量 */}
+        <div className="flex items-center gap-1.5 ml-2">
+          <span className="text-xs text-app-text-secondary/70">🔊</span>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={volume}
+            onChange={(e) => handleVolumeChange(Number(e.target.value))}
+            className="w-16 sm:w-20 h-1 accent-app-primary cursor-pointer"
+          />
+        </div>
+
+        {/* 循环 */}
+        <button
+          onClick={handleLoopToggle}
+          className={`rounded-md px-2 py-1 text-xs transition-colors ${
+            loop ? 'bg-app-primary/20 text-app-primary' : 'text-app-text-secondary/50 hover:text-app-text-secondary'
+          }`}
+        >
+          🔄 {loop ? 'ON' : 'OFF'}
+        </button>
+
         <div className="flex-1" />
         <Button variant="secondary" size="sm" onClick={handleDownloadWav}>
           {t('result.download.wav')}

@@ -12,6 +12,8 @@ export const audioEngine = {
   _playing: false,
   _vocalSynth: null as VocalSynth | null,
   _vocalEnabled: true,
+  _volume: 0.8,
+  _loop: false,
 
   async synthesize(params: MusicParams): Promise<AudioPlayback> {
     // 清理之前的合成器
@@ -25,14 +27,16 @@ export const audioEngine = {
     Tone.Transport.bpm.value = bpm
 
     // 创建合成器
+    const volOffset = linearToDb(this._volume)
+
     const melodySynth = new Tone.PolySynth(Tone.Synth).toDestination()
-    melodySynth.set({ volume: -8 })
+    melodySynth.set({ volume: volOffset - 8 })
 
     const chordSynth = new Tone.PolySynth(Tone.Synth).toDestination()
-    chordSynth.set({ volume: -14 })
+    chordSynth.set({ volume: volOffset - 14 })
 
     const bassSynth = new Tone.MonoSynth({
-      volume: -10,
+      volume: volOffset - 10,
       oscillator: { type: 'triangle' },
       filter: { frequency: 800 },
     }).toDestination()
@@ -87,9 +91,17 @@ export const audioEngine = {
       getCurrentTime: () => Tone.Transport.seconds,
       getDuration: () => realDuration,
       onEnd: (callback: () => void) => {
-        // 使用 Tone.Transport 调度结束
-        Tone.Transport.schedule(callback, realDuration)
+        const onEndCb = () => {
+          if (this._loop) {
+            Tone.Transport.position = 0
+            Tone.Transport.start()
+          } else {
+            callback()
+          }
+        }
+        Tone.Transport.schedule(onEndCb, realDuration)
       },
+      isPlaying: () => this._playing,
     }
 
     return playback
@@ -154,6 +166,21 @@ export const audioEngine = {
     return audioBufferToWavBlob(mainBuffer)
   },
 
+  setVolume(v: number) {
+    this._volume = Math.max(0, Math.min(1, v))
+    if (this._synths) {
+      this._synths.melody.set({ volume: linearToDb(this._volume) - 8 })
+      this._synths.chords.set({ volume: linearToDb(this._volume) - 14 })
+      this._synths.bass.set({ volume: linearToDb(this._volume) - 10 })
+    }
+  },
+
+  getVolume() { return this._volume },
+
+  setLoop(enabled: boolean) { this._loop = enabled },
+
+  getLoop() { return this._loop },
+
   setVocalEnabled(enabled: boolean) {
     this._vocalEnabled = enabled
   },
@@ -176,6 +203,11 @@ export const audioEngine = {
       this._vocalSynth = null
     }
   },
+}
+
+function linearToDb(linear: number): number {
+  if (linear <= 0) return -Infinity
+  return 20 * Math.log10(linear)
 }
 
 // === 辅助函数 ===
