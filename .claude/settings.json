@@ -10,7 +10,11 @@
       "Bash(npx tsc *)",
       "Bash(node -e \"const VF = require\\('vexflow'\\); const a = new VF.Annotation\\('test'\\); console.log\\('Annotation methods:', Object.getOwnPropertyNames\\(Object.getPrototypeOf\\(a\\)\\).filter\\(k => typeof a[k] !== 'function'\\).slice\\(0,10\\)\\); console.log\\('Stave addModifier params check...'\\); console.log\\('Annotation proto:', Object.getPrototypeOf\\(a\\).constructor.name\\)\")",
       "Bash(node -e \"const VF = require\\('vexflow'\\); const s = new VF.Stave\\(10,10,300\\); console.log\\('addModifier params length:', s.addModifier.length\\); const a = new VF.Annotation\\('test'\\); console.log\\('a instanceof:', Object.getPrototypeOf\\(a\\).constructor.name\\); console.log\\('is instance of Element:', a instanceof VF.Element\\); console.log\\('Element keys:', Object.keys\\(VF\\).filter\\(k => VF[k] && VF[k].prototype && VF[k].prototype.constructor && VF[k].prototype.constructor.name === 'Q'\\).slice\\(0,5\\)\\)\")",
-      "Bash(node \"e:/Program Files/Microsoft VS Code-WorkOut/muisc_app/scripts/png-to-ico.cjs\")"
+      "Bash(node \"e:/Program Files/Microsoft VS Code-WorkOut/muisc_app/scripts/png-to-ico.cjs\")",
+      "Bash(taskkill //F //IM \"AI Music Studio.exe\")",
+      "Bash(taskkill //F //IM \"electron.exe\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git add *)"
     ]
   }
 }
