@@ -27,7 +27,7 @@ export const localStorageService = {
 
 // === IndexedDB 部分（大容量数据：历史音频） ===
 
-const DB_NAME = 'ai-music-studio'
+const DB_NAME = 'melodia'
 const DB_VERSION = 1
 
 function openDB(): Promise<IDBDatabase> {

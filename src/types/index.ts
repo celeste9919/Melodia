@@ -1,4 +1,4 @@
-// === Data types for AI Music Studio ===
+// === Data types for Melodia ===
 
 /** User input for music generation */
 export interface MusicGenerateRequest {

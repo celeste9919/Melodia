@@ -2,7 +2,7 @@ import type { ThemeColors } from '@/types'
 
 type ThemeMode = 'dark' | 'light' | 'system'
 
-const STORAGE_KEY = 'ai-music-theme-mode'
+const STORAGE_KEY = 'melodia-theme-mode'
 
 // 默认深色主题（保留供 reset 使用）
 // @ts-ignore - kept for reference
@@ -129,7 +129,7 @@ export const themeService = {
         }
 
         applyColors(colors)
-        localStorage.setItem('ai-music-custom-theme', JSON.stringify(colors))
+        localStorage.setItem('melodia-custom-theme', JSON.stringify(colors))
         URL.revokeObjectURL(url)
         resolve(colors)
       }
@@ -137,7 +137,7 @@ export const themeService = {
   },
 
   resetTheme() {
-    localStorage.removeItem('ai-music-custom-theme')
+    localStorage.removeItem('melodia-custom-theme')
     const mode = this.getMode()
     this.setMode(mode)
   },

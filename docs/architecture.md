@@ -1,4 +1,4 @@
-# AI Music Studio 架构设计文档
+# Melodia 架构设计文档
 
 ## 1. 架构原则
 

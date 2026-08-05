@@ -1,7 +1,7 @@
 {
-  "name": "ai-music-studio",
-  "description": "AI-powered music generation studio - create unique music with DeepSeek AI and Tone.js synthesis",
-  "author": "AI Music Studio Team",
+  "name": "melodia",
+  "description": "Melodia - AI-powered music creation tool. Transform text descriptions into unique music with DeepSeek AI and Tone.js synthesis.",
+  "author": "Melodia Team",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -19,8 +19,8 @@
     "electron:build:mac": "vite build && electron-builder --mac"
   },
   "build": {
-    "appId": "com.ai-music-studio.app",
-    "productName": "AI Music Studio",
+    "appId": "com.melodia.app",
+    "productName": "Melodia",
     "directories": {
       "output": "release"
     },

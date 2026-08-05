@@ -62,6 +62,6 @@ server.listen(PORT, () => {
   }
   exec(cmd)
 
-  console.log(`AI Music Studio is running at: ${localUrl}`)
+  console.log(`Melodia is running at: ${localUrl}`)
   console.log('Press Ctrl+C to stop.')
 })

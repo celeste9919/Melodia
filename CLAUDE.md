@@ -1,8 +1,8 @@
-# AI Music Studio - CLAUDE.md
+# Melodia - CLAUDE.md
 
 ## 项目概述
 
-AI Music Studio（AI 音乐工坊）是一个 AI 音乐生成 Web 工具，用户通过文字描述或歌词输入，由 DeepSeek API 生成音乐参数，Tone.js 在浏览器端合成音频。
+Melodia 是一个 AI 音乐生成 Web 工具，用户通过文字描述或歌词输入，由 DeepSeek API 生成音乐参数，Tone.js 在浏览器端合成音频。
 
 ## 文档索引
 

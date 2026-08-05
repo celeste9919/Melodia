@@ -1,6 +1,6 @@
-# AI Music Studio - 桌面客户端
+# Melodia - 桌面客户端
 
-双击 `start.bat` 即可启动 AI Music Studio 桌面客户端。
+双击 `start.bat` 即可启动 Melodia 桌面客户端。
 
 ## 使用方法
 

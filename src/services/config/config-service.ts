@@ -1,7 +1,7 @@
 import { localStorageService } from '@/services/storage/storage-service'
 import type { AppConfig, ModelConfig } from '@/types'
 
-const CONFIG_KEY = 'ai-music-config'
+const CONFIG_KEY = 'melodia-config'
 
 const DEFAULT_CONFIG: AppConfig = {
   apiKey: '',

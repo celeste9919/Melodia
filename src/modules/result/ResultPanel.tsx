@@ -70,13 +70,13 @@ export default function ResultPanel({ result, audioBlob }: Props) {
 
   const handleDownloadWav = useCallback(() => {
     if (audioBlob) {
-      const filename = `ai-music-${result.id.slice(0, 8)}`
+      const filename = `melodia-${result.id.slice(0, 8)}`
       exportService.downloadWav(audioBlob, filename)
     }
   }, [audioBlob, result.id])
 
   const handleDownloadMidi = useCallback(() => {
-    const filename = `ai-music-${result.id.slice(0, 8)}`
+    const filename = `melodia-${result.id.slice(0, 8)}`
     exportService.downloadMidi(result.params, filename)
   }, [result.params, result.id])
 

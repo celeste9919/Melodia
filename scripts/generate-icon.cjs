@@ -1,4 +1,4 @@
-// Generate a simple 512x512 app icon PNG for AI Music Studio
+// Generate a simple 512x512 app icon PNG for Melodia
 // Uses only Node.js built-in modules (zlib + buffer)
 const zlib = require('zlib')
 const fs = require('fs')

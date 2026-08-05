@@ -1,13 +1,13 @@
-# AI Music Studio 需求规格说明书
+# Melodia 需求规格说明书
 
 ## 1. 项目概述
 
-- **项目名称**：AI Music Studio（AI 音乐工坊）
+- **项目名称**：Melodia
 - **项目类型**：AI 音乐生成 Web 工具
 - **目标用户**：通用型（音乐爱好者、创作者、内容创作者等）
 - **技术栈**：Vite + React + TypeScript + Tailwind CSS
 - **AI 模型**：默认 DeepSeek API，用户可配置其他 API（OpenAI、Claude 等）
-- **部署目标**：Web 应用优先 → 后期 Tauri 桌面版
+- **部署目标**：Web 应用优先 → Electron 桌面版
 - **AI 编码工具**：Claude Code
 
 ## 2. 用户画像

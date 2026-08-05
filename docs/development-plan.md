@@ -1,4 +1,4 @@
-# AI Music Studio 开发步骤规划
+# Melodia 开发步骤规划
 
 ## 总阶段
 

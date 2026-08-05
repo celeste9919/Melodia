@@ -10,7 +10,7 @@ i18n.use(initReactI18next).init({
     zh: {
       translation: {
         // App shell
-        'app.title': 'AI 音乐工坊',
+        'app.title': 'Melodia',
         'app.tagline': '用 AI 创作独一无二的音乐',
 
         // Navigation
@@ -116,7 +116,7 @@ i18n.use(initReactI18next).init({
     en: {
       translation: {
         // App shell
-        'app.title': 'AI Music Studio',
+        'app.title': 'Melodia',
         'app.tagline': 'Create unique music with AI',
 
         // Navigation

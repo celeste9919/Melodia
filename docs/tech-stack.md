@@ -1,4 +1,4 @@
-# AI Music Studio 技术规范文档
+# Melodia 技术规范文档
 
 ## 1. 技术栈
 

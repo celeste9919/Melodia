@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Starting AI Music Studio..."
+echo "Starting Melodia..."
 echo "The application will open in your browser shortly."
 echo "Press Ctrl+C to stop the server."
 echo ""
