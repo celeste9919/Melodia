@@ -15,8 +15,11 @@
     "electron:package": "vite build && electron-builder --win --dir",
     "electron:installer:win": "electron-builder --win --prepackaged release/win-unpacked",
     "electron:installer:mac": "electron-builder --mac --prepackaged release/mac",
+    "electron:package:linux": "vite build && electron-builder --linux --dir",
+    "electron:installer:linux": "electron-builder --linux --prepackaged release/linux-unpacked",
     "electron:build:win": "npm run electron:package && npm run electron:installer:win",
-    "electron:build:mac": "vite build && electron-builder --mac"
+    "electron:build:mac": "vite build && electron-builder --mac",
+    "electron:build:linux": "npm run electron:package:linux && npm run electron:installer:linux"
   },
   "build": {
     "appId": "com.melodia.app",
@@ -64,8 +67,22 @@
       "icon": "public/icon.png",
       "category": "public.app-category.music"
     },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "public/icon.png",
+      "category": "Audio"
+    },
     "dmg": {
-      "title": "AI Music Studio Installer",
+      "title": "Melodia Installer",
       "contents": [
         {
           "x": 130,
