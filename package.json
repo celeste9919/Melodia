@@ -1,7 +1,7 @@
 {
   "name": "melodia",
   "description": "Melodia - AI-powered music creation tool. Transform text descriptions into unique music with DeepSeek AI and Tone.js synthesis.",
-  "author": "Melodia Team",
+  "author": "Melodia Team <melodia@example.com>",
   "private": true,
   "version": "1.0.0",
   "type": "module",
