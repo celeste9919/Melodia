@@ -24,6 +24,10 @@
   "build": {
     "appId": "com.melodia.app",
     "productName": "Melodia",
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    },
     "directories": {
       "output": "release"
     },
