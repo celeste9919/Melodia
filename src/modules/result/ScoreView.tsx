@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Note, Chord } from '@/types'
 import { scoreRenderer } from '@/services/score/ScoreRenderer'
 
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function ScoreView({ melody, chords, bpm, tonicKey, scale }: Props) {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export default function ScoreView({ melody, chords, bpm, tonicKey, scale }: Prop
   if (melody.length === 0) {
     return (
       <div className="flex h-40 items-center justify-center text-app-text-secondary text-sm">
-        No melody to display
+        {t('score.empty')}
       </div>
     )
   }

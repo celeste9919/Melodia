@@ -1,7 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-// 翻译文件在 public/locales 目录，通过 fetch 加载
+// 翻译文件内联在 resources 中
 i18n.use(initReactI18next).init({
   lng: 'zh',
   fallbackLng: 'zh',
@@ -65,6 +65,21 @@ i18n.use(initReactI18next).init({
         'result.vocal.on': '人声：开',
         'result.vocal.off': '人声：关',
         'result.vocal.lyrics': '歌词',
+        'result.loop.on': 'ON',
+        'result.loop.off': 'OFF',
+
+        // Score
+        'score.empty': '暂无旋律数据',
+
+        // Welcome
+        'welcome.step1': '输入描述',
+        'welcome.step2': 'AI 生成',
+        'welcome.step3': '播放导出',
+        'welcome.styleHint': '支持多种音乐风格',
+        'welcome.footerHint': '在左侧输入灵感，开启你的第一首 AI 音乐',
+
+        // Error
+        'error.reload': '刷新页面',
 
         // History
         'history.title': '生成历史',
@@ -177,6 +192,21 @@ i18n.use(initReactI18next).init({
         'result.vocal.on': 'Vocals: On',
         'result.vocal.off': 'Vocals: Off',
         'result.vocal.lyrics': 'Lyrics',
+        'result.loop.on': 'ON',
+        'result.loop.off': 'OFF',
+
+        // Score
+        'score.empty': 'No melody to display',
+
+        // Welcome
+        'welcome.step1': 'Describe',
+        'welcome.step2': 'AI Composes',
+        'welcome.step3': 'Play & Export',
+        'welcome.styleHint': 'Supports multiple music styles',
+        'welcome.footerHint': 'Enter your inspiration on the left to create your first AI music',
+
+        // Error
+        'error.reload': 'Reload',
 
         // History
         'history.title': 'Generation History',

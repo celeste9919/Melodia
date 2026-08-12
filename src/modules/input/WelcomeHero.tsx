@@ -19,19 +19,19 @@ export default function WelcomeHero() {
       {/* 快速指引 */}
       <div className="mb-8 grid grid-cols-3 gap-3 w-full max-w-lg">
         {[
-          { num: '1', icon: '✏️', text: '输入描述' },
-          { num: '2', icon: '✨', text: 'AI 生成' },
-          { num: '3', icon: '🎧', text: '播放导出' },
+          { num: '1', icon: '✏️', key: 'welcome.step1' },
+          { num: '2', icon: '✨', key: 'welcome.step2' },
+          { num: '3', icon: '🎧', key: 'welcome.step3' },
         ].map((step) => (
           <div key={step.num} className="flex flex-col items-center gap-1.5 rounded-xl bg-app-bg p-3">
             <span className="text-xl">{step.icon}</span>
-            <span className="text-xs text-app-text-secondary">{step.text}</span>
+            <span className="text-xs text-app-text-secondary">{t(step.key)}</span>
           </div>
         ))}
       </div>
 
       {/* 风格标签 */}
-      <p className="mb-3 text-xs text-app-text-secondary/70">支持多种音乐风格</p>
+      <p className="mb-3 text-xs text-app-text-secondary/70">{t('welcome.styleHint')}</p>
       <div className="flex flex-wrap justify-center gap-1.5 max-w-md">
         {STYLE_PRESETS.map((s) => (
           <span
@@ -45,7 +45,7 @@ export default function WelcomeHero() {
 
       {/* 底部提示 */}
       <p className="mt-6 text-xs text-app-text-secondary/50">
-        左侧输入灵感，开启你的第一首 AI 音乐
+        {t('welcome.footerHint')}
       </p>
     </div>
   )

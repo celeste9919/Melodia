@@ -171,7 +171,7 @@ export default function ResultPanel({ result, audioBlob }: Props) {
             loop ? 'bg-app-primary/20 text-app-primary' : 'text-app-text-secondary/50 hover:text-app-text-secondary'
           }`}
         >
-          🔄 {loop ? 'ON' : 'OFF'}
+          🔄 {loop ? t('result.loop.on') : t('result.loop.off')}
         </button>
 
         <div className="flex-1" />
