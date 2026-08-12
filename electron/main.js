@@ -1,8 +1,10 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { autoUpdater } from 'electron-updater'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--dev')
 
 let mainWindow = null
 
@@ -20,8 +22,6 @@ function createWindow() {
     },
   })
 
-  const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--dev')
-
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173')
     mainWindow.webContents.openDevTools()
@@ -34,9 +34,28 @@ function createWindow() {
   })
 }
 
+function setupAutoUpdater() {
+  if (isDev) return
+
+  autoUpdater.autoDownload = true
+  autoUpdater.autoInstallOnAppQuit = true
+
+  autoUpdater.checkForUpdatesAndNotify().catch(() => {
+    // Silently ignore — no internet or release server unavailable
+  })
+
+  // Check every 6 hours
+  setInterval(() => {
+    autoUpdater.checkForUpdatesAndNotify().catch(() => {})
+  }, 6 * 60 * 60 * 1000)
+}
+
 Menu.setApplicationMenu(null)
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  createWindow()
+  setupAutoUpdater()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
