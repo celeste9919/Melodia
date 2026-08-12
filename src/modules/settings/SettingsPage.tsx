@@ -75,6 +75,19 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
+
+        {/* API 使用指引 */}
+        <details className="mt-4 max-w-md">
+          <summary className="cursor-pointer text-xs text-app-text-secondary/60 hover:text-app-text-secondary">
+            {t('settings.api.help.title')}
+          </summary>
+          <div className="mt-2 rounded-lg bg-app-bg p-3 text-xs text-app-text-secondary leading-relaxed">
+            <p>{t('settings.api.help.step1')}</p>
+            <p className="mt-1">{t('settings.api.help.step2')}</p>
+            <p className="mt-1">DeepSeek: <code className="rounded bg-app-border px-1 py-0.5 text-[11px]">deepseek-chat</code></p>
+            <p>OpenAI: <code className="rounded bg-app-border px-1 py-0.5 text-[11px]">gpt-4o</code></p>
+          </div>
+        </details>
       </section>
 
       {/* 语言和主题 */}

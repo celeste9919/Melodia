@@ -23,6 +23,8 @@ export const audioEngine = {
   _vocalEnabled: true,
   _volume: 0.8,
   _loop: false,
+  _reverbEnabled: false,
+  _reverb: null as ToneType.Reverb | null,
 
   async synthesize(params: MusicParams): Promise<AudioPlayback> {
     const Tone = await getTone()
@@ -51,6 +53,18 @@ export const audioEngine = {
     }).toDestination()
 
     this._synths = { melody: melodySynth, chords: chordSynth, bass: bassSynth }
+
+    // Reverb chain
+    if (this._reverbEnabled) {
+      const reverb = new Tone.Reverb({ decay: 2.5, wet: 0.3 }).toDestination()
+      this._reverb = reverb
+      melodySynth.disconnect()
+      chordSynth.disconnect()
+      bassSynth.disconnect()
+      melodySynth.connect(reverb)
+      chordSynth.connect(reverb)
+      bassSynth.connect(reverb)
+    }
 
     const melodyNotes = toToneNotes(params.melody, bpm)
     const chordNotes = toChordToneNotes(params.chords, bpm)
@@ -94,6 +108,9 @@ export const audioEngine = {
         Tone.Transport.stop()
         Tone.Transport.position = 0
         this._playing = false
+      },
+      seek: (time: number) => {
+        Tone.Transport.position = time
       },
       getCurrentTime: () => Tone.Transport.seconds,
       getDuration: () => realDuration,
@@ -188,6 +205,13 @@ export const audioEngine = {
 
   getLoop() { return this._loop },
 
+  toggleReverb() {
+    this._reverbEnabled = !this._reverbEnabled
+    return this._reverbEnabled
+  },
+
+  getReverb() { return this._reverbEnabled },
+
   toggleVocal() {
     this._vocalEnabled = !this._vocalEnabled
     if (!this._vocalEnabled && this._vocalSynth) {
@@ -206,6 +230,10 @@ export const audioEngine = {
     this._parts.forEach(p => p.dispose())
     this._parts = []
     this._playing = false
+    if (this._reverb) {
+      this._reverb.dispose()
+      this._reverb = null
+    }
     if (this._vocalSynth) {
       this._vocalSynth.dispose()
       this._vocalSynth = null

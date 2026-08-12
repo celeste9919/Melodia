@@ -100,6 +100,14 @@ export default function CreatePage() {
         {!isGenerating && result && (
           <ResultPanel result={result} audioBlob={audioBlob} />
         )}
+
+        {!isGenerating && !error && (
+          <div className="mt-4 flex justify-center gap-4 text-[10px] text-app-text-secondary/40">
+            <span>Space 播放/暂停</span>
+            <span>Esc 停止</span>
+            <span>Ctrl+Enter 生成</span>
+          </div>
+        )}
       </div>
     </div>
   )

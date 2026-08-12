@@ -80,6 +80,13 @@ i18n.use(initReactI18next).init({
 
         // Error
         'error.reload': '刷新页面',
+        'error.noApiKey': '请先在设置中配置 API Key',
+        'error.emptyInput': '请输入音乐描述',
+        'error.emptyLyrics': '请输入歌词',
+        'error.textTooLong': '描述文字过长，请控制在 2000 字以内',
+        'error.lyricsTooLong': '歌词过长，请控制在 5000 字以内',
+        'error.invalidDuration': '时长需要在 10-180 秒之间',
+        'error.parseError': 'AI 返回的数据无法解析，请重试',
 
         // History
         'history.title': '生成历史',
@@ -96,6 +103,9 @@ i18n.use(initReactI18next).init({
         'settings.api.provider': '模型提供商',
         'settings.api.model': '模型名称',
         'settings.api.endpoint': 'API 端点（可选，自定义配置）',
+        'settings.api.help.title': '如何获取 API Key？',
+        'settings.api.help.step1': '1. 访问 platform.deepseek.com 注册账号',
+        'settings.api.help.step2': '2. 在「API Keys」页面创建新 Key，复制粘贴到上方',
         'settings.language.title': '界面语言',
         'settings.theme.title': '主题模式',
         'settings.theme.dark': '深色',
@@ -207,6 +217,13 @@ i18n.use(initReactI18next).init({
 
         // Error
         'error.reload': 'Reload',
+        'error.noApiKey': 'Please configure API Key in Settings first',
+        'error.emptyInput': 'Please enter a music description',
+        'error.emptyLyrics': 'Please enter lyrics',
+        'error.textTooLong': 'Description too long, max 2000 characters',
+        'error.lyricsTooLong': 'Lyrics too long, max 5000 characters',
+        'error.invalidDuration': 'Duration must be between 10-180 seconds',
+        'error.parseError': 'Failed to parse AI response, please retry',
 
         // History
         'history.title': 'Generation History',
@@ -223,6 +240,9 @@ i18n.use(initReactI18next).init({
         'settings.api.provider': 'Model Provider',
         'settings.api.model': 'Model Name',
         'settings.api.endpoint': 'API Endpoint (optional, for custom config)',
+        'settings.api.help.title': 'How to get an API Key?',
+        'settings.api.help.step1': '1. Sign up at platform.deepseek.com',
+        'settings.api.help.step2': '2. Create a new key in "API Keys" page, paste it above',
         'settings.language.title': 'Interface Language',
         'settings.theme.title': 'Theme Mode',
         'settings.theme.dark': 'Dark',

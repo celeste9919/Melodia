@@ -121,6 +121,7 @@ export interface AudioPlayback {
   play: () => void
   pause: () => void
   stop: () => void
+  seek: (time: number) => void
   getCurrentTime: () => number
   getDuration: () => number
   onEnd: (callback: () => void) => void

@@ -3,6 +3,7 @@ import { promptBuilder } from '@/services/prompt/prompt-builder'
 import { aiClient } from '@/services/ai/ai-client'
 import { audioEngine } from '@/services/audio/audio-engine'
 import { configService } from '@/services/config/config-service'
+import i18n from '@/i18n/i18n'
 
 /**
  * 音乐生成编排器 — 编排完整流程：
@@ -15,7 +16,7 @@ export const musicOrchestrator = {
 
     // 2. 检查 API Key
     if (!configService.hasApiKey()) {
-      throw new OrchestratorError('请先在设置中配置 API Key', 'NO_API_KEY')
+      throw new OrchestratorError(i18n.t('error.noApiKey'), 'NO_API_KEY')
     }
 
     // 3. 构建 Prompt
@@ -48,22 +49,22 @@ export const musicOrchestrator = {
   validate(request: MusicGenerateRequest): void {
     if (request.mode === 'text') {
       if (!request.prompt || request.prompt.trim().length === 0) {
-        throw new OrchestratorError('请输入音乐描述', 'EMPTY_INPUT')
+        throw new OrchestratorError(i18n.t('error.emptyInput'), 'EMPTY_INPUT')
       }
       if (request.prompt.length > 2000) {
-        throw new OrchestratorError('描述文字过长，请控制在 2000 字以内', 'INPUT_TOO_LONG')
+        throw new OrchestratorError(i18n.t('error.textTooLong'), 'INPUT_TOO_LONG')
       }
     } else if (request.mode === 'lyrics') {
       if (!request.lyrics || request.lyrics.trim().length === 0) {
-        throw new OrchestratorError('请输入歌词', 'EMPTY_INPUT')
+        throw new OrchestratorError(i18n.t('error.emptyLyrics'), 'EMPTY_INPUT')
       }
       if (request.lyrics.length > 5000) {
-        throw new OrchestratorError('歌词过长，请控制在 5000 字以内', 'INPUT_TOO_LONG')
+        throw new OrchestratorError(i18n.t('error.lyricsTooLong'), 'INPUT_TOO_LONG')
       }
     }
 
     if (request.duration < 10 || request.duration > 180) {
-      throw new OrchestratorError('时长需要在 10-180 秒之间', 'INVALID_DURATION')
+      throw new OrchestratorError(i18n.t('error.invalidDuration'), 'INVALID_DURATION')
     }
   },
 
@@ -76,7 +77,7 @@ export const musicOrchestrator = {
 
       // 验证必要字段
       if (!parsed.bpm || !parsed.melody || !Array.isArray(parsed.melody)) {
-        throw new OrchestratorError('AI 返回的数据格式不正确，请重试', 'PARSE_ERROR')
+        throw new OrchestratorError(i18n.t('error.parseError'), 'PARSE_ERROR')
       }
 
       return {
@@ -92,7 +93,7 @@ export const musicOrchestrator = {
       }
     } catch (e) {
       if (e instanceof OrchestratorError) throw e
-      throw new OrchestratorError('无法解析 AI 返回的数据，请重试', 'PARSE_ERROR')
+      throw new OrchestratorError(i18n.t('error.parseError'), 'PARSE_ERROR')
     }
   },
 }

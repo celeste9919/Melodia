@@ -20,6 +20,7 @@ export default function ResultPanel({ result, audioBlob }: Props) {
   const [vocalEnabled, setVocalEnabled] = useState(true)
   const [volume, setVolume] = useState(audioEngine.getVolume())
   const [loop, setLoop] = useState(audioEngine.getLoop())
+  const [reverb, setReverb] = useState(audioEngine.getReverb())
   const hasVocals = result.params.vocals && result.params.vocals.length > 0
   const playbackRef = useRef<Awaited<ReturnType<typeof audioEngine.synthesize>> | null>(null)
   const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -89,6 +90,11 @@ export default function ResultPanel({ result, audioBlob }: Props) {
     setLoop(next)
     audioEngine.setLoop(next)
   }, [loop])
+
+  const handleReverbToggle = useCallback(() => {
+    const next = audioEngine.toggleReverb()
+    setReverb(next)
+  }, [])
 
   const handleDownloadWav = useCallback(() => {
     if (audioBlob) {
@@ -174,6 +180,15 @@ export default function ResultPanel({ result, audioBlob }: Props) {
           🔄 {loop ? t('result.loop.on') : t('result.loop.off')}
         </button>
 
+        <button
+          onClick={handleReverbToggle}
+          className={`rounded-md px-2 py-1 text-xs transition-colors ${
+            reverb ? 'bg-app-primary/20 text-app-primary' : 'text-app-text-secondary/50 hover:text-app-text-secondary'
+          }`}
+        >
+          🌊 {reverb ? t('result.loop.on') : t('result.loop.off')}
+        </button>
+
         <div className="flex-1" />
         <Button variant="secondary" size="sm" onClick={handleDownloadWav}>
           {t('result.download.wav')}
@@ -184,9 +199,19 @@ export default function ResultPanel({ result, audioBlob }: Props) {
       </div>
 
       {/* 进度条 */}
-      <div className="h-1.5 rounded-full bg-app-border">
+      <div
+        className="group relative h-3 cursor-pointer rounded-full bg-app-border"
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect()
+          const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+          const seekTime = ratio * duration
+          playbackRef.current?.seek(seekTime)
+          setCurrentTime(seekTime)
+        }}
+      >
+        <div className="absolute top-1 left-0 h-1.5 rounded-full bg-app-border w-full" />
         <div
-          className="h-full rounded-full bg-app-primary transition-all duration-150"
+          className="absolute top-1 left-0 h-1.5 rounded-full bg-app-primary transition-all duration-150 group-hover:bg-app-primary-hover"
           style={{ width: `${Math.min(100, progress)}%` }}
         />
       </div>
