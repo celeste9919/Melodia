@@ -194,7 +194,12 @@ export const audioEngine = {
   },
 
   dispose() {
-    this._synths = null
+    if (this._synths) {
+      this._synths.melody.dispose()
+      this._synths.chords.dispose()
+      this._synths.bass.dispose()
+      this._synths = null
+    }
     this._parts.forEach(p => p.dispose())
     this._parts = []
     this._playing = false
@@ -236,11 +241,16 @@ function beatsToToneTime(beats: number, bpm: number): number {
   return (beats / bpm) * 60
 }
 
+function beatsToDuration(beats: number): string {
+  const val = Math.round(4 / beats)
+  return `${val}n`
+}
+
 function toToneNotes(notes: Note[], bpm: number): ToneNote[] {
   return notes.map(n => ({
     time: beatsToToneTime(n.time, bpm),
     pitch: midiToFreq(n.pitch),
-    dur: `${beatsToToneTime(n.duration, bpm)}n`.replace(/[^0-9n]/g, ''),
+    dur: beatsToDuration(n.duration),
     velocity: n.velocity,
   }))
 }
@@ -270,7 +280,7 @@ function toChordToneNotes(chords: Chord[], bpm: number): ToneChordEvent[] {
     return {
       time: beatsToToneTime(c.time, bpm),
       notes,
-      dur: `${durationBeats}n`,
+      dur: beatsToDuration(durationBeats),
     }
   })
 }

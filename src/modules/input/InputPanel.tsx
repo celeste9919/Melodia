@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MusicGenerateRequest } from '@/types'
 import { STYLE_PRESETS } from '@/services/prompt/style-presets'
@@ -9,6 +10,7 @@ interface Props {
 
 export default function InputPanel({ onSubmit, isGenerating }: Props) {
   const { t } = useTranslation()
+  const [mode, setMode] = useState<'text' | 'lyrics'>('text')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,15 +18,15 @@ export default function InputPanel({ onSubmit, isGenerating }: Props) {
     const formData = new FormData(form)
 
     const request: MusicGenerateRequest = {
-      mode: formData.get('mode') as 'text' | 'lyrics',
+      mode,
       style: formData.get('style') as string,
       duration: Number(formData.get('duration')) || 30,
     }
 
-    if (request.mode === 'text') {
-      request.prompt = formData.get('prompt') as string
+    if (mode === 'text') {
+      request.prompt = (formData.get('prompt') as string) || undefined
     } else {
-      request.lyrics = formData.get('lyrics') as string
+      request.lyrics = (formData.get('lyrics') as string) || undefined
     }
 
     const tempo = formData.get('tempo')
@@ -42,23 +44,35 @@ export default function InputPanel({ onSubmit, isGenerating }: Props) {
 
       {/* 输入模式切换 */}
       <div className="flex gap-2">
-        <label className="flex items-center gap-2">
-          <input type="radio" name="mode" value="text" defaultChecked className="accent-app-primary" />
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="mode" value="text" checked={mode === 'text'} onChange={() => setMode('text')} className="accent-app-primary" />
           <span className="text-sm text-app-text">{t('input.mode.text')}</span>
         </label>
-        <label className="flex items-center gap-2">
-          <input type="radio" name="mode" value="lyrics" className="accent-app-primary" />
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="mode" value="lyrics" checked={mode === 'lyrics'} onChange={() => setMode('lyrics')} className="accent-app-primary" />
           <span className="text-sm text-app-text">{t('input.mode.lyrics')}</span>
         </label>
       </div>
 
       {/* 文字输入 */}
-      <textarea
-        name="prompt"
-        rows={5}
-        placeholder={t('input.prompt.placeholder')}
-        className="rounded-lg border border-app-border bg-app-bg px-4 py-3 text-sm text-app-text placeholder:text-app-text-secondary focus:border-app-primary focus:outline-none"
-      />
+      {mode === 'text' && (
+        <textarea
+          name="prompt"
+          rows={5}
+          placeholder={t('input.prompt.placeholder')}
+          className="rounded-lg border border-app-border bg-app-bg px-4 py-3 text-sm text-app-text placeholder:text-app-text-secondary focus:border-app-primary focus:outline-none"
+        />
+      )}
+
+      {/* 歌词输入 */}
+      {mode === 'lyrics' && (
+        <textarea
+          name="lyrics"
+          rows={6}
+          placeholder={t('input.lyrics.placeholder')}
+          className="rounded-lg border border-app-border bg-app-bg px-4 py-3 text-sm text-app-text placeholder:text-app-text-secondary focus:border-app-primary focus:outline-none"
+        />
+      )}
 
       {/* 风格选择 */}
       <div>

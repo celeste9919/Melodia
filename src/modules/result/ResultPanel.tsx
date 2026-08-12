@@ -257,7 +257,7 @@ export default function ResultPanel({ result, audioBlob }: Props) {
             melody={params.melody}
             chords={params.chords}
             bpm={params.bpm}
-            key={params.key}
+            tonicKey={params.key}
             scale={params.scale}
           />
         </Suspense>

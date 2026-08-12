@@ -19,29 +19,45 @@ export const exportService = {
   downloadMidi(params: MusicParams, filename: string): void {
     const tracks: MidiWriter.Track[] = []
 
-    // Track 1: 旋律
+    // Track 1: 旋律 (按时间排序，计算相对等待)
     const melodyTrack = new MidiWriter.Track()
     melodyTrack.setTempo(params.bpm)
 
-    params.melody.forEach(note => {
-      const midiNote = new MidiWriter.NoteEvent({
+    const sorted = [...params.melody].sort((a, b) => a.time - b.time)
+    sorted.forEach((note, i) => {
+      let waitBeats: number
+      if (i === 0) {
+        waitBeats = note.time
+      } else {
+        const prev = sorted[i - 1]
+        waitBeats = Math.max(0, note.time - prev.time - prev.duration)
+      }
+      melodyTrack.addEvent(new MidiWriter.NoteEvent({
         pitch: [note.pitch],
         duration: ticksFromBeats(note.duration),
         velocity: note.velocity,
-        wait: ticksFromBeats(note.time > 0 ? 0 : 0),
-      })
-      melodyTrack.addEvent(midiNote)
+        wait: ticksFromBeats(waitBeats),
+      }))
     })
     tracks.push(melodyTrack)
 
     // Track 2: 贝斯
     if (params.bass && params.bass.length > 0) {
       const bassTrack = new MidiWriter.Track()
-      params.bass.forEach(note => {
+      const sortedBass = [...params.bass].sort((a, b) => a.time - b.time)
+      sortedBass.forEach((note, i) => {
+        let waitBeats: number
+        if (i === 0) {
+          waitBeats = note.time
+        } else {
+          const prev = sortedBass[i - 1]
+          waitBeats = Math.max(0, note.time - prev.time - prev.duration)
+        }
         bassTrack.addEvent(new MidiWriter.NoteEvent({
           pitch: [note.pitch],
           duration: ticksFromBeats(note.duration),
           velocity: note.velocity,
+          wait: ticksFromBeats(waitBeats),
         }))
       })
       tracks.push(bassTrack)

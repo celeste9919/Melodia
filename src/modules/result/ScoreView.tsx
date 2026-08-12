@@ -6,11 +6,11 @@ interface Props {
   melody: Note[]
   chords: Chord[]
   bpm: number
-  key: string
+  tonicKey: string
   scale: 'major' | 'minor'
 }
 
-export default function ScoreView({ melody, chords, bpm, key, scale }: Props) {
+export default function ScoreView({ melody, chords, bpm, tonicKey, scale }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function ScoreView({ melody, chords, bpm, key, scale }: Props) {
 
     scoreRenderer.init(container)
     try {
-      scoreRenderer.render(melody, chords, bpm, { key, scale })
+      scoreRenderer.render(melody, chords, bpm, { key: tonicKey, scale })
     } catch {
       // Fallback gracefully
     }
@@ -27,7 +27,7 @@ export default function ScoreView({ melody, chords, bpm, key, scale }: Props) {
     return () => {
       scoreRenderer.dispose()
     }
-  }, [melody, chords, bpm, key, scale])
+  }, [melody, chords, bpm, tonicKey, scale])
 
   if (melody.length === 0) {
     return (
