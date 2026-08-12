@@ -6,10 +6,10 @@ export default function Header() {
   const location = useLocation()
 
   const navItems = [
-    { path: '/', label: t('nav.create'), icon: '&#x1F3B5;' },
-    { path: '/history', label: t('nav.history'), icon: '&#x1F4CB;' },
-    { path: '/settings', label: t('nav.settings'), icon: '&#x2699;' },
-    { path: '/theme', label: t('nav.theme'), icon: '&#x1F3A8;' },
+    { path: '/', label: t('nav.create'), icon: '\u{1F3B5}' },
+    { path: '/history', label: t('nav.history'), icon: '\u{1F4CB}' },
+    { path: '/settings', label: t('nav.settings'), icon: '⚙️' },
+    { path: '/theme', label: t('nav.theme'), icon: '\u{1F3A8}' },
   ]
 
   return (
@@ -17,9 +17,9 @@ export default function Header() {
       <div className="mx-auto flex h-14 max-w-7xl items-center gap-2 px-3 sm:gap-6 sm:px-4">
         {/* Logo */}
         <Link to="/" className="flex shrink-0 items-center gap-2 text-lg font-bold text-app-primary no-underline">
-          <span className="text-xl">&#x1F3B5;</span>
+          <span className="text-xl">{'\u{1F3B5}'}</span>
           <span className="hidden sm:inline">{t('app.title')}</span>
-          <span className="inline sm:hidden text-sm">AI &#x1F3B5;</span>
+          <span className="inline sm:hidden text-sm">Melodia {'\u{1F3B5}'}</span>
         </Link>
 
         {/* Nav */}
