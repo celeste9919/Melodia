@@ -42,11 +42,4 @@ export const configService = {
     return this.getConfig().apiKey.length > 0
   },
 
-  setLanguage(lang: 'zh' | 'en'): void {
-    this.setConfig({ language: lang })
-  },
-
-  getLanguage(): 'zh' | 'en' {
-    return this.getConfig().language
-  },
 }

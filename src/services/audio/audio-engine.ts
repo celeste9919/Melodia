@@ -1,14 +1,22 @@
 import type { MusicParams, AudioPlayback, Note, Chord, VocalNote } from '@/types'
-import * as Tone from 'tone'
+import type * as ToneType from 'tone'
 import { VocalSynth } from './vocal-synth'
+
+let _Tone: typeof ToneType | null = null
+async function getTone(): Promise<typeof ToneType> {
+  if (!_Tone) {
+    _Tone = await import('tone')
+  }
+  return _Tone
+}
 
 /**
  * 音频引擎 — 根据音乐参数使用 Tone.js 合成音频
  * 提供播放控制和 WAV 导出
  */
 export const audioEngine = {
-  _synths: null as { melody: Tone.PolySynth; chords: Tone.PolySynth; bass: Tone.MonoSynth } | null,
-  _parts: [] as Tone.Part[],
+  _synths: null as { melody: ToneType.PolySynth; chords: ToneType.PolySynth; bass: ToneType.MonoSynth } | null,
+  _parts: [] as ToneType.Part[],
   _playing: false,
   _vocalSynth: null as VocalSynth | null,
   _vocalEnabled: true,
@@ -16,7 +24,8 @@ export const audioEngine = {
   _loop: false,
 
   async synthesize(params: MusicParams): Promise<AudioPlayback> {
-    // 清理之前的合成器
+    const Tone = await getTone()
+
     this.dispose()
 
     await Tone.start()
@@ -26,7 +35,6 @@ export const audioEngine = {
     const bpm = params.bpm
     Tone.Transport.bpm.value = bpm
 
-    // 创建合成器
     const volOffset = linearToDb(this._volume)
 
     const melodySynth = new Tone.PolySynth(Tone.Synth).toDestination()
@@ -43,7 +51,6 @@ export const audioEngine = {
 
     this._synths = { melody: melodySynth, chords: chordSynth, bass: bassSynth }
 
-    // 转换音符为 Tone.js 事件
     const melodyNotes = toToneNotes(params.melody, bpm)
     const chordNotes = toChordToneNotes(params.chords, bpm)
     const bassNotes = params.bass ? toToneNotes(params.bass, bpm) : []
@@ -65,14 +72,13 @@ export const audioEngine = {
       this._parts.push(bassPart)
     }
 
-    // Vocal track via formant synthesis
     if (this._vocalEnabled && params.vocals && params.vocals.length > 0) {
       const rawCtx = Tone.getContext().rawContext as AudioContext
       this._vocalSynth = new VocalSynth(rawCtx)
       this._vocalSynth.synthesize(params.vocals, bpm)
     }
 
-    const realDuration = params.duration // duration 本身就是秒数
+    const realDuration = params.duration
 
     const playback: AudioPlayback = {
       play: () => {
@@ -111,12 +117,12 @@ export const audioEngine = {
    * 导出为 WAV — 使用 OfflineContext 渲染完整音频
    */
   async exportWav(params: MusicParams): Promise<Blob> {
-    await this.dispose()
+    const Tone = await getTone()
+    this.dispose()
 
     const duration = params.duration
     const sampleRate = 44100
 
-    // 使用 Tone.Offline 离线渲染
     const buffer = await Tone.Offline(({ transport }) => {
       transport.bpm.value = params.bpm
 
@@ -180,10 +186,6 @@ export const audioEngine = {
   setLoop(enabled: boolean) { this._loop = enabled },
 
   getLoop() { return this._loop },
-
-  setVocalEnabled(enabled: boolean) {
-    this._vocalEnabled = enabled
-  },
 
   toggleVocal() {
     this._vocalEnabled = !this._vocalEnabled

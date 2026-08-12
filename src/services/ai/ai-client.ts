@@ -87,9 +87,3 @@ export class AIError extends Error {
   }
 }
 
-/**
- * 检查是否为网络错误
- */
-export function isNetworkError(error: unknown): boolean {
-  return error instanceof TypeError && error.message === 'Failed to fetch'
-}

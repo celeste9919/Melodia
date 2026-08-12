@@ -4,32 +4,6 @@ type ThemeMode = 'dark' | 'light' | 'system'
 
 const STORAGE_KEY = 'melodia-theme-mode'
 
-// 默认深色主题（保留供 reset 使用）
-// @ts-ignore - kept for reference
-const _DEFAULT_DARK: ThemeColors = {
-  bg: '#0f0f1a',
-  surface: '#1a1a2e',
-  border: '#2a2a45',
-  text: '#e8e8f0',
-  textSecondary: '#9090a8',
-  primary: '#7c5cfc',
-  primaryHover: '#9b7fff',
-  accent: '#00d4aa',
-}
-
-// 默认浅色主题（保留供 reset 使用）
-// @ts-ignore - kept for reference
-const _DEFAULT_LIGHT: ThemeColors = {
-  bg: '#f5f5fa',
-  surface: '#ffffff',
-  border: '#d8d8e8',
-  text: '#1a1a2e',
-  textSecondary: '#6b6b85',
-  primary: '#6b48e0',
-  primaryHover: '#5535c0',
-  accent: '#00a884',
-}
-
 function applyColors(colors: ThemeColors) {
   const root = document.documentElement
   root.style.setProperty('--color-bg', colors.bg)

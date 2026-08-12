@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, lazy, Suspense, useEffect } from 'react'
+import { useState, useCallback, useRef, lazy, Suspense, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { MusicGenerateResult } from '@/types'
 import { audioEngine } from '@/services/audio/audio-engine'
@@ -118,6 +118,24 @@ export default function ResultPanel({ result, audioBlob }: Props) {
     return () => { delete (window as unknown as Record<string, unknown>).__melodiaPlayer }
   }, [handlePlay, handlePause, handleStop, isPlaying])
 
+  // 组件卸载时停止播放 + 清除定时器
+  useEffect(() => {
+    return () => {
+      clearProgressInterval()
+      playbackRef.current?.stop()
+    }
+  }, [clearProgressInterval])
+
+  // 预计算音符密度（避免每 50ms 重算 32 段）
+  const densityData = useMemo(() => {
+    return Array.from({ length: 32 }).map((_, i) => {
+      const count = params.melody.filter(
+        n => n.time >= i * params.duration / 32 && n.time < (i + 1) * params.duration / 32
+      ).length
+      return Math.min(100, count * 12 + 4)
+    })
+  }, [params.melody, params.duration])
+
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-app-border bg-app-surface p-6">
       {/* 播放控制区 */}
@@ -222,17 +240,13 @@ export default function ResultPanel({ result, audioBlob }: Props) {
 
           {/* 音符密度条 */}
           <div className="flex items-end gap-0.5 h-16">
-            {Array.from({ length: 32 }).map((_, i) => {
-              const segmentNotes = params.melody.filter(n => n.time >= i * params.duration / 32 && n.time < (i + 1) * params.duration / 32)
-              const height = Math.min(100, segmentNotes.length * 12 + 4)
-              return (
-                <div
-                  key={i}
-                  className="flex-1 rounded-t-sm bg-app-primary/60 transition-all"
-                  style={{ height: `${height}%` }}
-                />
-              )
-            })}
+            {densityData.map((h, i) => (
+              <div
+                key={i}
+                className="flex-1 rounded-t-sm bg-app-primary/60 transition-all"
+                style={{ height: `${h}%` }}
+              />
+            ))}
           </div>
 
           {/* 人声歌词展示 */}
@@ -240,7 +254,7 @@ export default function ResultPanel({ result, audioBlob }: Props) {
             <div>
               <p className="mb-2 text-xs font-medium text-app-text-secondary">{t('result.vocal.lyrics')}</p>
               <div className="flex flex-wrap gap-1.5">
-                {params.vocals!.map((v, i) => (
+                {params.vocals?.map((v, i) => (
                   <span key={i} className="rounded-md bg-green-500/10 px-2 py-1 text-xs text-green-500">
                     {v.lyric || v.vowel}
                   </span>
